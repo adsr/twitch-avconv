@@ -1,4 +1,4 @@
- #!/bin/bash
+#!/bin/bash
 twitch_key_file="${HOME}/.twitch_key"
 output_w=1280
 output_h=720
