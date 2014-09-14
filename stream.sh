@@ -3,7 +3,7 @@ twitch_key_file="${HOME}/.twitch_key"
 output_w=1280
 output_h=720
 output_size="${output_w}x${output_h}"
-side_w=360
+side_w=260
 wcam_dev=/dev/video0
 game_dev=/dev/video1
 game_w=$(echo "${output_w}-${side_w}"| bc)
@@ -33,10 +33,10 @@ avconv \
     -f x11grab -framerate 30 -s "${wndw_w}x${wndw_h}" -i ":0.0+${wndw_pos}" \
     -threads "${num_threads}" \
     -s "${output_size}" \
-    -filter_complex "[1:v]scale=${game_w}:-1,pad=${output_w}:${output_h}:0:0:black[game];
+    -filter_complex "[1:v]scale=${game_w}:-1[game];
                      [2:v]scale=${side_w}:-1[wcam];
-                     [3:v]crop=${wndw_w}:${wndw_h}[wndw];
-                     [game][wndw]overlay=${game_w}:0[game_wndw];
+                     [3:v]pad=${output_w}:${output_h}:${game_w}:0:black[wndw];
+                     [wndw][game]overlay=0:0[game_wndw];
                      [game_wndw][wcam]overlay=${game_w}:H-h" \
     -f flv -ac 2 -ar 44100 -vcodec libx264 \
     -g 60 -keyint_min 30 -b:v 1000k -minrate 1000k -maxrate 1000k \
