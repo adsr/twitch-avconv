@@ -52,7 +52,7 @@ avconv \
     -threads "${num_threads}" \
     -s "${output_size}" \
     -filter_complex "[1:v]format=yuv420p,scale=${gscale}[game];
-                     [2:v]format=yuv420p,scale=${side_w}:-1[wcam];
+                     [2:v]format=monow,scale=${side_w}:-1,unsharp[wcam];
                      [3:v]format=yuv420p,scale=${side_w}:-1,pad=${output_w}:${output_h}:${game_w}:0:black[wndw];
                      [wndw][game]overlay=0:0[game_wndw];
                      [game_wndw][wcam]overlay=${game_w}:H-h" \
@@ -60,8 +60,7 @@ avconv \
     -g 60 -keyint_min 30 -b:v 1000k -minrate 1000k -maxrate 1000k \
     -pix_fmt yuv420p -preset ultrafast -tune film \
     -strict normal -bufsize 1000k \
-    -c:v rawvideo -f nut - | avplay -i -
-#    "rtmp://live-jfk.twitch.tv/app/${twitch_key}"
+    "rtmp://live-jfk.twitch.tv/app/${twitch_key}"
 
 # To test, replace last line with:
 #     -c:v rawvideo -f nut - | avplay -i -
